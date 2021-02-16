@@ -12,7 +12,7 @@ DB_USER="nba_sql"
 DB_PASSWORD="nba_sql"
 ```
 
-## Usage
+## :wrench: Usage
 
 Requirements:
 
