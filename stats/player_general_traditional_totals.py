@@ -107,7 +107,7 @@ class PlayerGeneralTraditionalTotalsRequester:
                 'cfparams': row[64]
             }
             rows.append(new_row)
-        PlayerGeneralTraditionalTotals.insert_many(rows).on_conflict_ignore().execute()
+        PlayerGeneralTraditionalTotals.insert_many(rows).execute()
 
     def build_params(self, season_id):
         """

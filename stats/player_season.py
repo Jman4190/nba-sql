@@ -66,7 +66,7 @@ class PlayerSeasonRequester:
                 'ast_pct': row[22]
             }
             rows.append(new_row)
-        PlayerSeason.insert_many(rows).on_conflict_ignore().execute()
+        PlayerSeason.insert_many(rows).execute()
 
     def build_params(self, season_id):
         """
