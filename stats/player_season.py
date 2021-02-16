@@ -41,30 +41,32 @@ class PlayerSeasonRequester:
         # pulling just the data we want
         player_info = response['resultSets'][0]['rowSet']
 
+        rows = []
+
         # looping over data to insert into table
         for row in player_info:
-            player = PlayerSeason(
-                season_id=season_id,  # this is key, need this to join and sort by seasons
-                player_id=row[0],
-                team_id=row[2],
-                team_abbreviation=row[3],
-                age=row[4],
-                player_height=row[5],
-                player_height_inches=row[6],
-                player_weight=row[7],
-                gp=row[13],
-                pts=row[14],
-                reb=row[15],
-                ast=row[16],
-                net_rating=row[17],
-                oreb_pct=row[18],
-                dreb_pct=row[19],
-                usg_pct=row[20],
-                ts_pct=row[21],
-                ast_pct=row[22]
-            )
-
-            player.save()
+            new_row = {
+                'season_id': season_id,  # this is key, need this to join and sort by seasons
+                'player_id': row[0],
+                'team_id': row[2],
+                'team_abbreviation': row[3],
+                'age': row[4],
+                'player_height': row[5],
+                'player_height_inches': row[6],
+                'player_weight': row[7],
+                'gp': row[13],
+                'pts': row[14],
+                'reb': row[15],
+                'ast': row[16],
+                'net_rating': row[17],
+                'oreb_pct': row[18],
+                'dreb_pct': row[19],
+                'usg_pct': row[20],
+                'ts_pct': row[21],
+                'ast_pct': row[22]
+            }
+            rows.append(new_row)
+        PlayerSeason.insert_many(rows).on_conflict_ignore().execute()
 
     def build_params(self, season_id):
         """

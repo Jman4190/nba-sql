@@ -41,19 +41,23 @@ class PlayerRequester:
         # pulling just the data we want
         player_info = response['resultSets'][0]['rowSet']
 
-        # looping over data to insert into table
-        for row in player_info:
-            player = Player(
-                player_id=row[0],
-                player_name=row[1],
-                college=row[8],
-                country=row[9],
-                draft_year=row[10],
-                draft_round=row[11],
-                draft_number=row[12],
-            )
+        rows = []
 
-            player.save()
+        # looping over data to insert into table
+        # direct array is a PITA, how can we abstract this...
+        for row in player_info:
+            new_row = {
+                'player_id': row[0],
+                'player_name': row[1],
+                'college': row[8],
+                'country': row[9],
+                'draft_year': row[10],
+                'draft_round': row[11],
+                'draft_number': row[12]
+            }
+            rows.append(new_row)
+
+        Player.insert_many(rows).on_conflict_ignore().execute()
 
     def build_params(self, season_id):
         """
