@@ -1,7 +1,7 @@
 from peewee import *
 
 class Player(Model):
-    player_id = IntegerField(primary_key = True)
+    player_id = IntegerField(primary_key=True)
     player_name = CharField(null = True)
     college = CharField(null = True)
     country = CharField(null = True)

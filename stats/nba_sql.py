@@ -13,8 +13,7 @@ import argparse
 from player_general_traditional_totals import PlayerGeneralTraditionalTotalsRequester
 from player_season import PlayerSeasonRequester
 from player import PlayerRequester
-
-from models import PlayerGameLogs
+from player_game_log import PlayerGameLogRequester
 
 def main():
     """
@@ -49,10 +48,17 @@ def main():
 
     player_requester = PlayerRequester(settings)
     player_season_requester = PlayerSeasonRequester(settings)
+    player_game_log_requester = PlayerGameLogRequester(settings)
     pgtt_requester = PlayerGeneralTraditionalTotalsRequester(settings)
 
     if create_schema:
-        do_create_schema(settings, player_requester, player_season_requester, pgtt_requester)
+        do_create_schema(
+            settings, 
+            player_requester, 
+            player_season_requester, 
+            player_game_log_requester,
+            pgtt_requester
+        )
 
     for season_id in season_list:
 
@@ -61,7 +67,7 @@ def main():
         player_season_requester.populate_season(season_id)
         pgtt_requester.populate_season(season_id)
 
-def do_create_schema(settings, player_requester, player_season_requester, pgtt_requester):
+def do_create_schema(settings, player_requester, player_season_requester, player_game_log_requester, pgtt_requester):
     """
     Function to initialize database schema.
     """
@@ -69,6 +75,7 @@ def do_create_schema(settings, player_requester, player_season_requester, pgtt_r
 
     player_requester.create_ddl()
     player_season_requester.create_ddl()
+    player_game_log_requester.create_ddl()
     pgtt_requester.create_ddl()
 
 if __name__ == "__main__":

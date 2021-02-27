@@ -36,18 +36,3 @@ class Settings:
                 password=DB_PASSWORD,
                 charset='utf8mb4'
             )
-
-'''
-DB_NAME = 'nba_stats'
-DB_HOST = 'localhost'
-DB_USER = 'root'
-DB_PASSWORD = 'Jman4190m!'
-
- 
-db = MySQLDatabase(
-    DB_NAME,
-    host=DB_HOST,
-    user=DB_USER,
-    password=DB_PASSWORD,
-    charset='utf8mb4'
-)'''
