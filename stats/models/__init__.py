@@ -1,8 +1,5 @@
-from .BaseModel import BaseModel
-
 # Season Totals Tables
 from .PlayerGeneralTraditionalTotals import PlayerGeneralTraditionalTotals
-from .PlayerGeneralAdvancedTotals import PlayerGeneralAdvancedTotals
 
 # Team Tables
 from .TeamGeneralTraditional import TeamGeneralTraditional

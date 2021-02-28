@@ -1,7 +1,6 @@
 from peewee import *
-from models import BaseModel
 
-class TeamGameLogs(BaseModel):
+class TeamGameLogs(Model):
     season_id = CharField(null = True)
     team_id = IntegerField(null = True)
     team_abbreviation = CharField(null = True)
@@ -33,4 +32,4 @@ class TeamGameLogs(BaseModel):
     video_available = IntegerField(null = True)
 	
     class Meta:
-        db_table = 'team_game_logs'
+        db_table = 'team_game_log'
