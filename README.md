@@ -2,7 +2,7 @@
 
 An application to build a Postgres or MySQL NBA database from the public API.
 
-The default behavior is collecting seasons 1996-97 to 2019-20 and inserting them into a MySQL databse. There are flags provided to change to a Postgres database, and to specify a specific season.
+The default behavior is collecting seasons 1996-97 to 2020-21 and inserting them into a MySQL databse. There are flags provided to change to a Postgres database, and to specify a specific season.
 
 The following environment variables must be set. There are no commandline arguments to specify these. The following example are connection details for the provided docker-compose database:
 ```
@@ -10,6 +10,14 @@ DB_NAME="nba"
 DB_HOST="localhost"
 DB_USER="nba_sql"
 DB_PASSWORD="nba_sql"
+```
+
+Here is an example query. Lets say we want to find Russell Westbrook's total Triple-Doubles:
+```
+SELECT SUM(td3) 
+FROM player_game_log 
+LEFT JOIN player ON player.player_id = player_game_log.player_id 
+WHERE player.player_name = 'Russell Westbrook';
 ```
 
 ## :crystal_ball: Schema
