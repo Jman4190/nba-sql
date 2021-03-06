@@ -9,6 +9,7 @@ class PlayerRequester:
 
     per_mode = 'Totals'
     player_info_url = 'http://stats.nba.com/stats/leaguedashplayerbiostats'
+    rows = []
 
     def __init__(self, settings):
         """
@@ -24,24 +25,22 @@ class PlayerRequester:
         """
         self.settings.db.create_tables([Player], safe=True)
 
-    def populate_season(self, season_id):
+    def add_player(self, season_id):
         """
-        Build GET REST request to the NBA for a season, iterate over the results,
-        store in the database.
+        Build GET REST request to the NBA for a season.
+        Since we're in the context of a single player, we'll assemble rows one at a time
+        then do a bulk insert at the end.
         """
         params = self.build_params(season_id)
 
         # Encode without safe '+', apparently the NBA likes unsafe url params.
         params_str = urllib.parse.urlencode(params, safe=':+')
-        response = requests.get(url=self.player_info_url, headers=headers, params=params_str).json()
 
 	    # json response
         response = requests.get(url=self.player_info_url, headers=headers, params=params_str).json()
 
         # pulling just the data we want
         player_info = response['resultSets'][0]['rowSet']
-
-        rows = []
 
         # looping over data to insert into table
         # direct array is a PITA, how can we abstract this...
@@ -55,9 +54,13 @@ class PlayerRequester:
                 'draft_round': row[11],
                 'draft_number': row[12]
             }
-            rows.append(new_row)
+            self.rows.append(new_row)
 
-        Player.insert_many(rows).on_conflict_ignore().execute()
+    def populate(self):
+        """
+        Store collected rows.
+        """
+        Player.insert_many(self.rows).on_conflict_ignore().execute()
 
     def build_params(self, season_id):
         """

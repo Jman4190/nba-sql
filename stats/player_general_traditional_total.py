@@ -1,10 +1,10 @@
 import requests
 import urllib.parse
 
-from models import PlayerGeneralTraditionalTotals
+from models import PlayerGeneralTraditionalTotal
 from constants import season_list, headers
 
-class PlayerGeneralTraditionalTotalsRequester:
+class PlayerGeneralTraditionalTotalRequester:
 
     player_info_url = 'https://stats.nba.com/stats/leaguedashplayerstats'
     per_mode = 'Totals'
@@ -15,13 +15,13 @@ class PlayerGeneralTraditionalTotalsRequester:
         database.
         """
         self.settings = settings
-        self.settings.db.bind([PlayerGeneralTraditionalTotals])
+        self.settings.db.bind([PlayerGeneralTraditionalTotal])
 
     def create_ddl(self):
         """
         Initialize the table schema.
         """
-        self.settings.db.create_tables([PlayerGeneralTraditionalTotals], safe=True)
+        self.settings.db.create_tables([PlayerGeneralTraditionalTotal], safe=True)
 
     def populate_season(self, season_id):
         """
@@ -107,7 +107,7 @@ class PlayerGeneralTraditionalTotalsRequester:
                 'cfparams': row[64]
             }
             rows.append(new_row)
-        PlayerGeneralTraditionalTotals.insert_many(rows).execute()
+        PlayerGeneralTraditionalTotal.insert_many(rows).execute()
 
     def build_params(self, season_id):
         """

@@ -1,11 +1,12 @@
-# Season Totals Tables
-from .PlayerGeneralTraditionalTotals import PlayerGeneralTraditionalTotals
+## Base Tables
+from .Player import Player
+from .Team import Team
 
 # Team Tables
-from .TeamGeneralTraditional import TeamGeneralTraditional
-from .TeamGameLogs import TeamGameLogs
+from .TeamSeason import TeamSeason
+from .TeamGameLog import TeamGameLog
 
 # Misc Tables
-from .Player import Player
 from .PlayerSeason import PlayerSeason
-from .PlayerGameLogs import PlayerGameLogs
+from .PlayerGameLog import PlayerGameLog
+from .PlayerGeneralTraditionalTotal import PlayerGeneralTraditionalTotal

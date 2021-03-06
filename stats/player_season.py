@@ -33,7 +33,6 @@ class PlayerSeasonRequester:
 
         # Encode without safe '+', apparently the NBA likes unsafe url params.
         params_str = urllib.parse.urlencode(params, safe=':+')
-        response = requests.get(url=self.player_info_url, headers=headers, params=params_str).json()
 
 	    # json response
         response = requests.get(url=self.player_info_url, headers=headers, params=params_str).json()
@@ -49,7 +48,6 @@ class PlayerSeasonRequester:
                 'season_id': season_id,  # this is key, need this to join and sort by seasons
                 'player_id': row[0],
                 'team_id': row[2],
-                'team_abbreviation': row[3],
                 'age': row[4],
                 'player_height': row[5],
                 'player_height_inches': row[6],

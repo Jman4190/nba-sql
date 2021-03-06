@@ -1,9 +1,16 @@
 from peewee import *
+from . import Player
+from . import Team
 
-class PlayerGeneralTraditionalTotals(Model):
+class PlayerGeneralTraditionalTotal(Model):
+
+    ## See `PlayerSeason` model for the comment on this...
+
+    ## Composite Unique Index Fields
+    player_id = ForeignKeyField(Player, null=False, index=True)
     season_id = CharField(null=False, index=True)
-    player_id = IntegerField(null=False, index=True)
-    team_id = IntegerField(null=True, index=True)
+    team_id = ForeignKeyField(Team, index=True, null=True)
+
     age = IntegerField(null=True)
     gp = IntegerField(null=True)
     w = IntegerField(null=True)
@@ -67,4 +74,7 @@ class PlayerGeneralTraditionalTotals(Model):
     cfparams = CharField(null=True)
 
     class Meta:
-        db_table = 'player_general_traditional_totals'
+        db_table = 'player_general_traditional_total'
+        indexes = (
+            (('player_id', 'season_id', 'team_id'), True),
+        )

@@ -1,4 +1,3 @@
-# player_bios.py - scraps data from stats.nba.com and inserts into player_bios table within MySQL nba stats database
 import requests
 import urllib.parse
 
@@ -6,16 +5,15 @@ from settings import Settings
 from models import PlayerGameLog
 from constants import season_list, headers
 
-class PlayerGameLog:
+class PlayerGameLogRequester:
 
-    per_mode = 'Totals'
-    url = 'https://stats.nba.com/stats/leaguegamelogs'
+    url = 'https://stats.nba.com/stats/playergamelogs'
 
     def __init__(self, settings):
-        self.settings = setitings
+        self.settings = settings
         self.settings.db.bind([PlayerGameLog])
 
-    def create_ddel(self):
+    def create_ddl(self):
         """
         Initialize the table schema.
         """
@@ -30,7 +28,8 @@ class PlayerGameLog:
 
         # Encode without safe '+', apparently the NBA likes unsafe url params.
         params_str = urllib.parse.urlencode(params, safe=':+')
-        response = requests.get(url=self.player_info_url, headers=headers, params=params_str).json()
+
+        response = requests.get(url=self.url, headers=headers, params=params_str).json()
 
         # pulling just the data we want
         player_info = response['resultSets'][0]['rowSet']
@@ -47,7 +46,7 @@ class PlayerGameLog:
                 'game_date': row[7],
                 'matchup': row[8],
                 'wl': row[9],
-                'min': row[10]
+                'min': row[10],
                 'fgm': row[11],
                 'fga': row[12],
                 'fg_pct': row[13],
@@ -73,7 +72,7 @@ class PlayerGameLog:
                 'dd2': row[33],
                 'td3': row[34]
             }
-            rows.apppend(new_row)
+            rows.append(new_row)
 
         PlayerGameLog.insert_many(rows).execute()
 
@@ -81,3 +80,26 @@ class PlayerGameLog:
         """
         Create required parameters dict for the request.
         """
+        return {
+            'DateFrom': '',
+            'DateTo': '',
+            'GameSegment': '',
+            'LastNGames': '',
+            'LeagueID': '', 
+            'Location': '',
+            'MeasureType': '',
+            'Month': '',
+            'OppTeamID': '',
+            'Outcome': '',
+            'PORound': '',
+            'PerMode': '',
+            'Period': '',
+            'PlayerID': '',
+            'Season': season_id,
+            'SeasonSegment': '',
+            'SeasonType': '',
+            'ShotClockRange': '',
+            'TeamID': '',
+            'VsConference': '',
+            'VsDivision': ''
+        }

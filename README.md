@@ -49,6 +49,11 @@ To enable a Postgres database, use the `--database` flag. Example:
 python stats/nba_sql.py --database="postgres"
 ```
 
+We have added a half second delay between making requests to the NBA stats API. To configure the amount of time use the `--time_between_requests` flag.
+```bash
+python stats/nba_sql.py --time_between_requests=.5
+```
+
 ### Local development
 
 ##### The manual way

@@ -1,13 +1,22 @@
 from peewee import *
+from . import Player
+from . import Team
 
 class PlayerGameLog(Model):
-    season_id = CharField(index=True)
-    player_id = IntegerField(index=True)
-    team_id = IntegerField(null=False)
+    
+    ## Composite PK Fields
+    player_id = ForeignKeyField(Player, index=True)
     game_id = CharField(null=True)
+
+    ## Foreign Keys
+    team_id = ForeignKeyField(Team, index=True)
+
+    ## Indexes
+    season_id = CharField(index=True)
+
     game_date = CharField(null=True)
     matchup = CharField(null=True)
-    wl = FloatField(null=True)
+    wl = FixedCharField(null=True, max_length=1)
     min = FloatField(null=True)
     fgm = FloatField(null=True)
     fga = FloatField(null=True)
@@ -36,3 +45,7 @@ class PlayerGameLog(Model):
 
     class Meta:
         db_table = 'player_game_log'
+        primary_key = CompositeKey(
+            'player_id',
+            'game_id'
+        )
