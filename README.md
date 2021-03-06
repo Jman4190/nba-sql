@@ -15,7 +15,7 @@ DB_PASSWORD="nba_sql"
 ## :crystal_ball: Schema
 An up-to-date ER diagram can be found in [`image/NBA-ER.jpg`](https://github.com/mpope9/nba-sql/blob/master/image/NBA-ER.jpg).
 
-## :wrench: Usage
+## :wrench: Building From Scratch
 
 Requirements:
 
@@ -23,9 +23,9 @@ Python >= 3.6
 
 ### :scroll: Provided Scripts
 
-In the `scripts` directory, we provide a way to create and load the schema for a Postgres database. We also provide a docker-compose setup for development and to preview the data.
+In the `scripts` directory, we provide a way to create the schema and load the data for a Postgres database. We also provide a docker-compose setup for development and to preview the data.
 
-```bash
+```shell
 # Required if you're on Debian based systems
 sudo service postgresql stop
 docker-compose up -d
