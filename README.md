@@ -2,7 +2,7 @@
 
 An application to build a Postgres or MySQL NBA database from the public API.
 
-The default behavior is collecting seasons 1996-86 to 2019-20 and inserting them into a MySQL databse. There are flags provided to change to a Postgres database, and to specify a specific season.
+The default behavior is collecting seasons 1996-96 to 2019-20 and inserting them into a MySQL databse. There are flags provided to change to a Postgres database, and to specify a specific season.
 
 The following environment variables must be set. There are no commandline arguments to specify these. The following example are connection details for the provided docker-compose database:
 ```
