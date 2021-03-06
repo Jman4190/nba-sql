@@ -12,7 +12,7 @@ DB_USER="nba_sql"
 DB_PASSWORD="nba_sql"
 ```
 
-## Schema
+## :crystal_ball: Schema
 An up-to-date ER diagram can be found in [`image/NBA-ER.jpg`](https://github.com/mpope9/nba-sql/blob/master/image/NBA-ER.jpg).
 
 ## :wrench: Usage
@@ -57,7 +57,7 @@ We have added a half second delay between making requests to the NBA stats API. 
 python stats/nba_sql.py --time_between_requests=.5
 ```
 
-### Local development
+### :computer: Local development
 
 ##### The manual way
 Create your virtual environment if you don’t have one already. In this case we use `venv` as the target folder for storing packages.
