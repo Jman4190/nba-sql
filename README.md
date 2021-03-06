@@ -12,6 +12,9 @@ DB_USER="nba_sql"
 DB_PASSWORD="nba_sql"
 ```
 
+## Schema
+An up-to-date ER diagram can be found in [`image/NBA-ER.jpg`](https://github.com/mpope9/nba-sql/blob/master/image/NBA-ER.jpg).
+
 ## :wrench: Usage
 
 Requirements:
