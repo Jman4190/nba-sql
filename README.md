@@ -2,6 +2,8 @@
 
 An application to build a Postgres or MySQL NBA database from the public API.
 
+This DB is still under construction and liable to schema changes. v1 will be a postgres dump file and will be included in the release. Until then, expect to rebuild the whole DB when trying to upgrade.
+
 The default behavior is collecting seasons 1996-97 to 2020-21 and inserting them into a MySQL database. There are flags provided to change to a Postgres database, and to specify a specific season.
 
 [A good place for more information is the wiki](https://github.com/mpope9/nba-sql/wiki).
