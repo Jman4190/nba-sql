@@ -6,7 +6,7 @@ This DB is still under construction and liable to schema changes. v1 will be a p
 
 The default behavior is collecting seasons 1996-97 to 2020-21 and inserting them into a MySQL database. There are flags provided to change to a Postgres database, and to specify a specific season.
 
-Big shoutout to BurntSushi's (nbadb)[https://github.com/BurntSushi/nfldb]. It was a great inspiration to this project.
+Big shoutout to BurntSushi's [nfldb](https://github.com/BurntSushi/nfldb). It was a great inspiration to this project.
 
 [A good place for more information is the wiki](https://github.com/mpope9/nba-sql/wiki).
 
