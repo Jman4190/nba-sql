@@ -1,6 +1,7 @@
 import requests
 import urllib.parse
 
+from peewee import fn
 from settings import Settings
 from models import PlayerGameLog
 from constants import season_list, headers
@@ -19,6 +20,12 @@ class PlayerGameLogRequester:
         """
         self.settings.db.create_tables([PlayerGameLog], safe=True)
 
+    def get_game_ids(self):
+        """
+        Returns a query containing the game_ids stored in the database.
+        """
+        return PlayerGameLog.select(fn.Distinct(PlayerGameLog.game_id))
+
     def populate_season(self, season_id):
         """
         Build GET REST request to the NBA for a season, iterate over the results,
@@ -36,10 +43,13 @@ class PlayerGameLogRequester:
 
         rows = []
 
+        game_ids = set()
+
         # looping over data to insert into table
         for row in player_info:
+            game_ids.add(row[6])
             new_row = {
-                'season_id': row[0],
+                'season_id': int(season_id[:4]),
                 'player_id': row[1],
                 'team_id': row[3],
                 'game_id': row[6],
@@ -85,7 +95,7 @@ class PlayerGameLogRequester:
             'DateTo': '',
             'GameSegment': '',
             'LastNGames': '',
-            'LeagueID': '', 
+            'LeagueID': '00', 
             'Location': '',
             'MeasureType': '',
             'Month': '',
@@ -97,7 +107,7 @@ class PlayerGameLogRequester:
             'PlayerID': '',
             'Season': season_id,
             'SeasonSegment': '',
-            'SeasonType': '',
+            'SeasonType': 'Regular Season',
             'ShotClockRange': '',
             'TeamID': '',
             'VsConference': '',

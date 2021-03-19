@@ -4,11 +4,13 @@ from . import Team
 
 class PlayerGeneralTraditionalTotal(Model):
 
-    ## See `PlayerSeason` model for the comment on this...
+    ## Defaulting to auto generated id column. We do this because
+    ## team_id is nullable for players in a season and that breaks the
+    ## team table's Primary Key constraint.
 
-    ## Composite Unique Index Fields
+    ## Composite Unique Index
     player_id = ForeignKeyField(Player, null=False, index=True)
-    season_id = CharField(null=False, index=True)
+    season_id = IntegerField(null=False, index=True)
     team_id = ForeignKeyField(Team, index=True, null=True)
 
     age = IntegerField(null=True)
