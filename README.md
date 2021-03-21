@@ -4,11 +4,14 @@ An application to build a Postgres or MySQL NBA database from the public API.
 
 This DB is still under construction and liable to schema changes. v1 will be a postgres dump file and will be included in the release. Until then, expect to rebuild the whole DB when trying to upgrade.
 
-The default behavior is collecting seasons 1996-97 to 2020-21 and inserting them into a MySQL database. There are flags provided to change to a Postgres database, and to specify a specific season.
+The default behavior is collecting seasons 1996-97 to 2020-21 and inserting them into a MySQL database. There are flags provided to change to a Postgres database, and to specify a specific season. See commandline reference below.
 
-Big shoutout to BurntSushi's [nfldb](https://github.com/BurntSushi/nfldb). It was a great inspiration to this project.
+Big shoutout to BurntSushi's [nfldb](https://github.com/BurntSushi/nfldb) as well as the [nba_api project](https://github.com/swar/nba_api). They are great inspirations and indispensable resources to this project.
 
-[A good place for more information is the wiki](https://github.com/mpope9/nba-sql/wiki).
+# Getting Started
+
+* [A good place for more information is the wiki](https://github.com/mpope9/nba-sql/wiki).
+* [Looking to contribute? Check the list of open issues!](https://github.com/mpope9/nba-sql/issues).
 
 It will take an estimated 3 hours to build the whole database. Around 10 mins if play-by-play data isn't desired.
 
@@ -20,7 +23,7 @@ DB_USER="nba_sql"
 DB_PASSWORD="nba_sql"
 ```
 
-Here is an example query. Lets say we want to find Russell Westbrook's total Triple-Doubles:
+Here is an example query which can be used after building the database. Lets say we want to find Russell Westbrook's total Triple-Doubles:
 ```
 SELECT SUM(td3) 
 FROM player_game_log 
