@@ -11,7 +11,7 @@ Big shoutout to BurntSushi's [nfldb](https://github.com/BurntSushi/nfldb) as wel
 # Getting Started
 
 * [A good place for more information is the wiki](https://github.com/mpope9/nba-sql/wiki).
-* [Looking to contribute? Check the list of open issues!](https://github.com/mpope9/nba-sql/issues).
+* [Looking to contribute? Check the list of open issues!](https://github.com/mpope9/nba-sql/issues)
 
 It will take an estimated 3 hours to build the whole database. Around 10 mins if play-by-play data isn't desired.
 
