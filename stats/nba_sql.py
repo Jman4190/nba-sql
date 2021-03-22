@@ -16,6 +16,7 @@ import copy
 from team import TeamRequester
 from player import PlayerRequester
 from event_message_type import EventMessageTypeBuilder
+from game import GameBuilder
 
 from player_season import PlayerSeasonRequester
 from player_game_log import PlayerGameLogRequester
@@ -72,55 +73,69 @@ def main():
     player_requester = PlayerRequester(settings)
     team_requester = TeamRequester(settings)
     event_message_type_builder = EventMessageTypeBuilder(settings)
+    game_builder = GameBuilder(settings)
 
     player_season_requester = PlayerSeasonRequester(settings)
     player_game_log_requester = PlayerGameLogRequester(settings)
     pgtt_requester = PlayerGeneralTraditionalTotalRequester(settings)
     play_by_play_requester = PlayByPlayRequester(settings)
 
-    do_create_schema(
-        create_schema, 
-        player_requester, 
-        player_season_requester, 
+    object_list = [
+        # Base Objects
+        player_requester,
+        team_requester,
+        event_message_type_builder,
+        game_builder,
+
+        ## Dependent Objects
+        player_season_requester,
         player_game_log_requester,
         play_by_play_requester,
-        pgtt_requester,
-        team_requester,
-        event_message_type_builder)
+        pgtt_requester
+    ]
+    do_create_schema(create_schema, object_list)
 
-    populate_base_tables(
-        do_base_tables, 
-        request_gap, 
-        team_requester, 
-        player_requester, 
-        event_message_type_builder)
+    #populate_base_tables(
+    #    do_base_tables,
+    #    request_gap,
+    #    team_requester,
+    #    player_requester,
+    #    event_message_type_builder)
 
     season_bar = progress_bar(
         season_list, 
         prefix='Loading Seasonal Data',
         suffix='This one will take a while...',
-        length=len(season_list))
+        length=30)
 
-    # Load seasonal data for NBA teams only.
+    player_game_log_rows = []
+    ## Load seasonal data.
     for season_id in season_bar:
 
         player_game_log_requester.populate_season(season_id)
         time.sleep(request_gap)
 
-        player_season_requester.populate_season(season_id)
-        time.sleep(request_gap)
+    #    player_season_requester.populate_season(season_id)
+    #    time.sleep(request_gap)
 
-        pgtt_requester.populate_season(season_id)
-        time.sleep(request_gap)
+    #    pgtt_requester.populate_season(season_id)
+    #    time.sleep(request_gap)
+
+    ## First, load game specific data.
+    game_set = player_game_log_requester.get_game_set()
+    print('Loading cached game table.')
+    game_builder.populate_table(game_set)
+    game_builder.set_game_set(set())
 
     game_list = player_game_log_requester.get_game_ids()
     game_progress_bar = progress_bar(
         game_list, 
         prefix='Loading Game Data',
-        suffix='This one will take a while...',
         length=30)
 
-    ## Load game data.
+    ## Next load fetched seasonal data that depends on the game table.
+
+    ## Load game dependent data.
     player_id_set = player_requester.get_id_set()
     rows = []
 
@@ -142,9 +157,7 @@ def main():
 
     print("Done! Enjoy the hot, fresh database.")
 
-def do_create_schema(create_schema, player_requester, player_season_requester, 
-    player_game_log_requester, play_by_play_requester, pgtt_requester, team_requester,
-    event_message_type_builder):
+def do_create_schema(create_schema, object_list):
     """
     Function to initialize database schema.
     """
@@ -153,15 +166,8 @@ def do_create_schema(create_schema, player_requester, player_season_requester,
 
     print("Initializing schema.")
 
-    # Base Tables
-    player_requester.create_ddl()
-    team_requester.create_ddl()
-    event_message_type_builder.create_ddl()
-
-    player_season_requester.create_ddl()
-    player_game_log_requester.create_ddl()
-    pgtt_requester.create_ddl()
-    play_by_play_requester.create_ddl()
+    for obj in object_list:
+        obj.create_ddl()
 
 def populate_base_tables(do_base_tables, request_gap, team_requester, player_requester, 
     event_message_type_builder):
@@ -176,13 +182,13 @@ def populate_base_tables(do_base_tables, request_gap, team_requester, player_req
         team_ids, 
         prefix='team Table Loading', 
         suffix='', 
-        length=len(team_ids))
+        length=30)
 
     player_bar = progress_bar(
         season_list, 
         prefix='player Table Loading',
         suffix='',
-        length=len(season_list))
+        length=30)
 
     # Load team data.
     print('Populating team data')

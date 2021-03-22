@@ -87,6 +87,46 @@ team_ids = [
 ]
 
 """
+Mapping from team abbrev to id.
+"""
+team_abbrev_mapping = {
+    'ATL': 1610612737,
+    'BOS': 1610612738,
+    'CLE': 1610612739,
+    'NOP': 1610612740,
+    'NOH': 1610612740, # Old name.
+    'CHI': 1610612741,
+    'DAL': 1610612742,
+    'DEN': 1610612743,
+    'GSW': 1610612744,
+    'HOU': 1610612745,
+    'LAC': 1610612746,
+    'LAL': 1610612747,
+    'MIA': 1610612748,
+    'MIL': 1610612749,
+    'MIN': 1610612750,
+    'BKN': 1610612751,
+    'NJN': 1610612751, # Old name.
+    'NYK': 1610612752,
+    'ORL': 1610612753,
+    'IND': 1610612754,
+    'PHI': 1610612755,
+    'PHX': 1610612756,
+    'POR': 1610612757,
+    'SAC': 1610612758,
+    'SAS': 1610612759,
+    'OKC': 1610612760,
+    'TOR': 1610612761,
+    'UTA': 1610612762,
+    'MEM': 1610612763,
+    'WAS': 1610612764,
+    'DET': 1610612765,
+    'CHA': 1610612766,
+}
+
+
+
+"""
 Play-by-play data has an EventMsgType field. This is an enum. There
 is also the EventMsgActionField, which is a complex enum of 
 (EventMsgType, SubType).

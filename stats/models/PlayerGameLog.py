@@ -14,8 +14,6 @@ class PlayerGameLog(Model):
     ## Indexes
     season_id = IntegerField(index=True)
 
-    game_date = CharField(null=True)
-    matchup = CharField(null=True)
     wl = FixedCharField(null=True, max_length=1)
     min = FloatField(null=True)
     fgm = FloatField(null=True)
