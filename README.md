@@ -32,6 +32,16 @@ WHERE player.player_name = 'Russell Westbrook';
 ```
 
 ## :crystal_ball: Schema
+#### Supported Tables
+* player
+* team
+* game
+* play_by_play
+* player_game_log
+* player_season
+* team_game_log
+* team_season
+
 An up-to-date ER diagram can be found in [`image/NBA-ER.jpg`](https://github.com/mpope9/nba-sql/blob/master/image/NBA-ER.jpg).
 
 ## :wrench: Building From Scratch
