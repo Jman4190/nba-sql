@@ -1,12 +1,13 @@
 from peewee import *
 from . import Player
 from . import Team
+from . import Game
 
 class PlayerGameLog(Model):
     
     ## Composite PK Fields
     player_id = ForeignKeyField(Player, index=True)
-    game_id = CharField(null=True)
+    game_id = ForeignKeyField(Game, null=True)
 
     ## Foreign Keys
     team_id = ForeignKeyField(Team, index=True)
@@ -14,8 +15,6 @@ class PlayerGameLog(Model):
     ## Indexes
     season_id = IntegerField(index=True)
 
-    game_date = CharField(null=True)
-    matchup = CharField(null=True)
     wl = FixedCharField(null=True, max_length=1)
     min = FloatField(null=True)
     fgm = FloatField(null=True)

@@ -1,6 +1,7 @@
 ## Base Tables
 from .Player import Player
 from .Team import Team
+from .Game import Game
 
 ## Misc Tables
 from .EventMessageType import EventMessageType
