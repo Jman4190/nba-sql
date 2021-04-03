@@ -94,6 +94,8 @@ team_abbrev_mapping = {
     'BOS': 1610612738,
     'CLE': 1610612739,
     'NOP': 1610612740,
+    'NOK': 1610612740, # Old name.
+    'CHH': 1610612740, # Old name.
     'NOH': 1610612740, # Old name.
     'CHI': 1610612741,
     'DAL': 1610612742,
