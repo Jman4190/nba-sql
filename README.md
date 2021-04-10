@@ -2,7 +2,13 @@
 
 An application to build a Postgres or MySQL NBA database from the public API.
 
-To access the latest Postgres dump file [check the releases tab](https://github.com/mpope9/nba-sql/releases/tag/v0.0.1).
+To access the latest Postgres dump file [check the releases tab](https://github.com/mpope9/nba-sql/releases).
+
+To use a PG dump from the releases, decompress using `xc`, then load with `psql`, like this:
+```bash
+xz -d nba.sql.xz
+psql -U <USERNAME> <DBNAME> < nba.sql
+```
 
 This DB is still under construction and liable to schema changes. v0.1.0 will be the final schema. Until then, expect to rebuild the whole DB when trying to upgrade.
 
