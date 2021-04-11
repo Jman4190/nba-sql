@@ -1,6 +1,6 @@
 # :basketball: nba-sql
 
-[![Github releases (by release)](https://img.shields.io/github/downloads/mpope9/nba-sql/v0.0.2/total.svg)](https://GitHub.com/mpope9/nba-sql/releases/)
+[![Github All Releases](https://img.shields.io/github/downloads/mpope9/nba-sql/total.svg)]()
 
 An application to build a Postgres or MySQL NBA database from the public API.
 
