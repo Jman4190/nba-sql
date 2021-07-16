@@ -2,7 +2,8 @@ import requests
 import urllib.parse
 
 from models import PlayerGeneralTraditionalTotal
-from constants import season_list, headers
+from constants import headers
+
 
 class PlayerGeneralTraditionalTotalRequester:
 
@@ -21,18 +22,25 @@ class PlayerGeneralTraditionalTotalRequester:
         """
         Initialize the table schema.
         """
-        self.settings.db.create_tables([PlayerGeneralTraditionalTotal], safe=True)
+        self.settings.db.create_tables(
+            [PlayerGeneralTraditionalTotal],
+            safe=True
+        )
 
     def populate_season(self, season_id):
         """
-        Build GET REST request to the NBA for a season, iterate over the results,
-        store in the database.
+        Build GET REST request to the NBA for a season,
+        iterate over the results, store in the database.
         """
         params = self.build_params(season_id)
 
         # Encode without safe '+', apparently the NBA likes unsafe url params.
         params_str = urllib.parse.urlencode(params, safe=':+')
-        response = requests.get(url=self.player_info_url, headers=headers, params=params_str).json()
+        response = (
+            requests
+            .get(url=self.player_info_url, headers=headers, params=params_str)
+            .json()
+        )
 
         # pulling just the data we want
         player_info = response['resultSets'][0]['rowSet']

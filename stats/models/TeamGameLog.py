@@ -1,14 +1,22 @@
-from peewee import *
+from peewee import (
+    ForeignKeyField,
+    IntegerField,
+    CharField,
+    FloatField,
+    Model,
+    CompositeKey
+)
 from . import Team
 from . import Game
 
+
 class TeamGameLog(Model):
 
-    ## Composite PK Fields
+    # Composite PK Fields
     team_id = ForeignKeyField(Team, index=True)
     game_id = ForeignKeyField(Game, index=True)
 
-    ## Indexes
+    # Indexes
     season_id = IntegerField(index=True)
 
     game_date = CharField(null=True)
@@ -35,7 +43,7 @@ class TeamGameLog(Model):
     pts = FloatField(null=True)
     plus_minus = FloatField(null=True)
     video_available = IntegerField(null=True)
-	
+
     class Meta:
         db_table = 'team_game_log'
         primary_key = CompositeKey(

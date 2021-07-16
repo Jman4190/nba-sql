@@ -1,4 +1,9 @@
-from peewee import *
+from peewee import (
+    IntegerField,
+    CharField,
+    Model
+)
+
 
 class Player(Model):
 

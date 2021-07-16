@@ -6,30 +6,30 @@ Constants used in the application.
 List of seasons.
 """
 season_list = [
-	'1996-97',
-	'1997-98',
-	'1998-99',
-	'1999-00',
-	'2000-01',
-	'2001-02',
-	'2002-03',
-	'2003-04',
-	'2004-05',
-	'2005-06',
-	'2006-07',
-	'2007-08',
-	'2008-09',
-	'2009-10',
-	'2010-11',
-	'2011-12',
-	'2012-13',
-	'2013-14',
-	'2014-15',
-	'2015-16',
-	'2016-17',
-	'2017-18',
-	'2018-19',
-	'2019-20',
+    '1996-97',
+    '1997-98',
+    '1998-99',
+    '1999-00',
+    '2000-01',
+    '2001-02',
+    '2002-03',
+    '2003-04',
+    '2004-05',
+    '2005-06',
+    '2006-07',
+    '2007-08',
+    '2008-09',
+    '2009-10',
+    '2010-11',
+    '2011-12',
+    '2012-13',
+    '2013-14',
+    '2014-15',
+    '2015-16',
+    '2016-17',
+    '2017-18',
+    '2018-19',
+    '2019-20',
     '2020-21'
 ]
 
@@ -40,8 +40,11 @@ headers = {
     'Connection': 'keep-alive',
     'Accept': 'application/json, text/plain, */*',
     'x-nba-stats-token': 'true',
-    #'User-Agent': 'Mozilla/5.0 (X11; Linux i686; rv:86.0) Gecko/20100101 Firefox/86.0',
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36',
+    'User-Agent': (
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) '
+        'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130'
+        'Safari/537.36'
+    ),
     'x-nba-stats-origin': 'stats',
     'Sec-Fetch-Site': 'same-origin',
     'Sec-Fetch-Mode': 'cors',
@@ -54,36 +57,36 @@ headers = {
 Team IDs. (Thank you nba-api).
 """
 team_ids = [
-    1610612737, #'ATL'
-    1610612738, #'BOS'
-    1610612739, #'CLE'
-    1610612740, #'NOP'
-    1610612741, #'CHI'
-    1610612742, #'DAL'
-    1610612743, #'DEN'
-    1610612744, #'GSW'
-    1610612745, #'HOU'
-    1610612746, #'LAC'
-    1610612747, #'LAL'
-    1610612748, #'MIA'
-    1610612749, #'MIL'
-    1610612750, #'MIN'
-    1610612751, #'BKN'
-    1610612752, #'NYK'
-    1610612753, #'ORL'
-    1610612754, #'IND'
-    1610612755, #'PHI'
-    1610612756, #'PHX'
-    1610612757, #'POR'
-    1610612758, #'SAC'
-    1610612759, #'SAS'
-    1610612760, #'OKC'
-    1610612761, #'TOR'
-    1610612762, #'UTA'
-    1610612763, #'MEM'
-    1610612764, #'WAS'
-    1610612765, #'DET'
-    1610612766, #'CHA'
+    1610612737,     # 'ATL'
+    1610612738,     # 'BOS'
+    1610612739,     # 'CLE'
+    1610612740,     # 'NOP'
+    1610612741,     # 'CHI'
+    1610612742,     # 'DAL'
+    1610612743,     # 'DEN'
+    1610612744,     # 'GSW'
+    1610612745,     # 'HOU'
+    1610612746,     # 'LAC'
+    1610612747,     # 'LAL'
+    1610612748,     # 'MIA'
+    1610612749,     # 'MIL'
+    1610612750,     # 'MIN'
+    1610612751,     # 'BKN'
+    1610612752,     # 'NYK'
+    1610612753,     # 'ORL'
+    1610612754,     # 'IND'
+    1610612755,     # 'PHI'
+    1610612756,     # 'PHX'
+    1610612757,     # 'POR'
+    1610612758,     # 'SAC'
+    1610612759,     # 'SAS'
+    1610612760,     # 'OKC'
+    1610612761,     # 'TOR'
+    1610612762,     # 'UTA'
+    1610612763,     # 'MEM'
+    1610612764,     # 'WAS'
+    1610612765,     # 'DET'
+    1610612766,     # 'CHA'
 ]
 
 """
@@ -94,9 +97,9 @@ team_abbrev_mapping = {
     'BOS': 1610612738,
     'CLE': 1610612739,
     'NOP': 1610612740,
-    'NOK': 1610612740, # Old name.
-    'CHH': 1610612740, # Old name.
-    'NOH': 1610612740, # Old name.
+    'NOK': 1610612740,  # Old name.
+    'CHH': 1610612740,  # Old name.
+    'NOH': 1610612740,  # Old name.
     'CHI': 1610612741,
     'DAL': 1610612742,
     'DEN': 1610612743,
@@ -108,7 +111,7 @@ team_abbrev_mapping = {
     'MIL': 1610612749,
     'MIN': 1610612750,
     'BKN': 1610612751,
-    'NJN': 1610612751, # Old name.
+    'NJN': 1610612751,  # Old name.
     'NYK': 1610612752,
     'ORL': 1610612753,
     'IND': 1610612754,
@@ -121,7 +124,7 @@ team_abbrev_mapping = {
     'SEA': 1610612760,
     'TOR': 1610612761,
     'UTA': 1610612762,
-    'VAN': 1610612763, # Old name.
+    'VAN': 1610612763,  # Old name.
     'MEM': 1610612763,
     'WAS': 1610612764,
     'DET': 1610612765,
@@ -129,36 +132,26 @@ team_abbrev_mapping = {
 }
 
 
-
 """
 Play-by-play data has an EventMsgType field. This is an enum. There
-is also the EventMsgActionField, which is a complex enum of 
+is also the EventMsgActionField, which is a complex enum of
 (EventMsgType, SubType).
 We're going to make a lookup table of enum to value, then a lookup
 table for the (EventMsgType, EventMsgActionType) pair.
 """
 event_message_types = [
-    {'id': 1,  'string': 'FIELD_GOAL_MADE'},
-    {'id': 2,  'string': 'FIELD_GOAL_MISSED'},
-    {'id': 3,  'string': 'FREE_THROW'},
-    {'id': 4,  'string': 'REBOUND'},
-    {'id': 5,  'string': 'TURNOVER'},
-    {'id': 6,  'string': 'FOUL'},
-    {'id': 7,  'string': 'VIOLATION'},
-    {'id': 8,  'string': 'SUBSTITUTION'},
-    {'id': 9,  'string': 'TIMEOUT'},
+    {'id': 1, 'string': 'FIELD_GOAL_MADE'},
+    {'id': 2, 'string': 'FIELD_GOAL_MISSED'},
+    {'id': 3, 'string': 'FREE_THROW'},
+    {'id': 4, 'string': 'REBOUND'},
+    {'id': 5, 'string': 'TURNOVER'},
+    {'id': 6, 'string': 'FOUL'},
+    {'id': 7, 'string': 'VIOLATION'},
+    {'id': 8, 'string': 'SUBSTITUTION'},
+    {'id': 9, 'string': 'TIMEOUT'},
     {'id': 10, 'string': 'JUMP_BALL'},
     {'id': 11, 'string': 'EJECTION'},
     {'id': 12, 'string': 'PERIOD_BEGIN'},
     {'id': 13, 'string': 'PERIOD_END'},
     {'id': 18, 'string': 'UNKNOWN'}
 ]
-
-#event_action_types = {
-#    1: {
-#        1: 'JUMP_SHOT', # TODO Distinguish between 2pt and 3pt jump shot
-#        2: ''
-#    },
-#    2: {
-#    }
-#}

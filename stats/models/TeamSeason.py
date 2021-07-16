@@ -1,10 +1,15 @@
-from peewee import *
+from peewee import (
+    IntegerField,
+    CharField,
+    Model
+)
+
 
 class TeamSeason(Model):
 
     team_id = IntegerField(primary_key=True)
 
-    ## Indexes
+    # Indexes
     season_id = IntegerField(index=True)
 
     owner = CharField(null=True)
