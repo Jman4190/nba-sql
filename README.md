@@ -68,11 +68,17 @@ In the `scripts` directory, we provide a way to create the schema and load the d
 ```shell
 # Required if you're on Debian based systems
 sudo service postgresql stop
-docker-compose up -d
+
+docker-compose -f docker/docker-compose-postgres.yml up -d
 
 pip install -r requirements.txt
 
 ./scripts/create_postgres.sh
+```
+
+If you want to use MySQL, start it with:
+```
+docker-compose -f docker/docker-compose-mysql.yml up -d
 ```
 
 ### :snake: Directly Calling Python
@@ -106,7 +112,7 @@ python stats/nba_sq.py --create-schema --database postgres --skip-tables play_by
 
 ### :computer: Local development
 
-##### The manual way
+#### Setup
 Create your virtual environment if you don’t have one already. In this case we use `venv` as the target folder for storing packages.
 
 `python -m venv venv`
@@ -116,3 +122,15 @@ Then activate it:
 
 Install dependencies using:
 `pip install -r requirements.txt`
+
+##### OSX Errors
+
+If you try to setup on OSX and see an error like
+```
+Error: pg_config executable not found.
+```
+
+This can be resolved by installing `postgresql` through Homebrew:
+```bash
+brew install postgresql
+```

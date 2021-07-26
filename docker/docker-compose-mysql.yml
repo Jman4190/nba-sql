@@ -1,0 +1,23 @@
+#
+# Development environment for the nba_sql application.
+# Thank you, superset, for the great template :)
+#
+version: "3.7"
+
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    ports:
+      - "127.0.0.1:3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: nba
+      MYSQL_USER: nba_sql
+      MYSQL_PASSWORD: nba_sql
+
+volumes:
+  db_data:
+    external: false
