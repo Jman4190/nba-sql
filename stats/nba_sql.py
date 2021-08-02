@@ -9,6 +9,7 @@ from player_general_traditional_total import (
     PlayerGeneralTraditionalTotalRequester
 )
 from play_by_play import PlayByPlayRequester
+from shot_chart_detail import ShotChartDetailRequester
 
 from constants import season_list, team_ids
 from settings import Settings
@@ -36,13 +37,20 @@ def main():
 
     parser = argparse.ArgumentParser(description=description)
 
+    ## TODO: Current season doesn't work with the player endpoint.
+    last_loadable_season = season_list[-2]
+
     parser.add_argument(
-        '--season',
-        dest='season',
-        default='all',
+        '--seasons',
+        dest='seasons',
+        default=last_loadable_season,
+        choices=season_list,
         help="""
-            The season flag loads the database with the specified season.
+            The seasons flag loads the database with the specified season.
             The format of the season should be in the form "YYYY-YY".
+            The default behavior is loading the current season.
+            Example usage:
+            --seasons 2019-2020 2020-2021
             """
     )
 
@@ -72,10 +80,12 @@ def main():
         '--database',
         dest='database',
         default='mysql',
-        choices=['mysql', 'postgres'],
+        choices=['mysql', 'postgres', 'sqlite'],
         help="""
             The database flag specifies which database protocol to use.
-            Defaults to "mysql", but also accepts "postgres".
+            Defaults to "mysql", but also accepts "postgres" and "sqlite".
+            Example usage:
+            --database postgres
             """
     )
 
@@ -94,7 +104,7 @@ def main():
         action='store',
         nargs="*",
         default=[],
-        choices=['player_season', 'player_game_log', 'play_by_play', 'pgtt'],
+        choices=['player_season', 'player_game_log', 'play_by_play', 'pgtt', 'shot_chart_detail'],
         help=(
             "Use this option to skip loading certain tables. "
             " Example: --skip-tables play_by_play pgtt"
@@ -107,14 +117,9 @@ def main():
     create_schema = args.create_schema
     request_gap = float(args.request_gap)
     skip_base_tables = args.skip_base_tables
-    season = args.season
-    skip_tables = args.skip_tables
-
     seasons = []
-    if season is not None:
-        seasons.append(season)
-    else:
-        seasons = season_list
+    seasons.append(args.seasons)
+    skip_tables = args.skip_tables
 
     settings = Settings(database)
 
@@ -127,6 +132,7 @@ def main():
     player_game_log_requester = PlayerGameLogRequester(settings)
     pgtt_requester = PlayerGeneralTraditionalTotalRequester(settings)
     play_by_play_requester = PlayByPlayRequester(settings)
+    shot_chart_requester = ShotChartDetailRequester(settings)
 
     object_list = [
         # Base Objects
@@ -139,7 +145,8 @@ def main():
         player_season_requester,
         player_game_log_requester,
         play_by_play_requester,
-        pgtt_requester
+        pgtt_requester,
+        shot_chart_requester
     ]
 
     if create_schema:
@@ -172,6 +179,7 @@ def main():
 
     # Fetch ids from tuples.
     game_list = [game[1] for game in game_set]
+
     game_progress_bar = progress_bar(
         game_list,
         prefix='Loading PlayByPlay Data',
@@ -203,10 +211,29 @@ def main():
                 time.sleep(request_gap)
 
     if 'player_game_log' not in skip_tables:
-        # Finally store player_game_log data after loading game data.
-        print("Storing player_game_log table.")
+
+        print("Starting PlayerGameLog Insert")
         player_game_log_requester.populate()
-        time.sleep(request_gap)
+        print("Finished PlayerGameLog Insert")
+
+    if 'shot_chart_detail' not in skip_tables:
+
+        print("Fetching set of team_id and player_ids for the ShotChartData.")
+        team_player_set = player_game_log_requester.get_team_player_id_set()
+        print("Finished fetching.")
+        shot_chart_bar = progress_bar(
+            team_player_set,
+            prefix='Loading Shot Chart Data',
+            suffix='',
+            length=30)
+
+        for id_tuple in shot_chart_bar:
+
+            shot_chart_requester.generate_rows(id_tuple[0], id_tuple[1])
+            shot_chart_requester.populate()
+            time.sleep(request_gap)
+
+        shot_chart_requester.finalize()
 
     season_bar = progress_bar(
         seasons,
