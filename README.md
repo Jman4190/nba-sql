@@ -16,14 +16,10 @@ This DB is still under construction and liable to schema changes. v0.1.0 will be
 
 The default behavior is loading the previous season into a MySQL database. There are flags provided use a Postgres or SQLite database, and to specify a specific season. See commandline reference below.
 
-Big shoutout to BurntSushi's [nfldb](https://github.com/BurntSushi/nfldb) as well as the [nba_api project](https://github.com/swar/nba_api). They are great inspirations and indispensable resources to this project.
-
 # Getting Started
 
 * [A good place for more information is the wiki](https://github.com/mpope9/nba-sql/wiki).
 * [Looking to contribute? Check the list of open issues!](https://github.com/mpope9/nba-sql/issues)
-
-It will take an estimated 6 hours to build the whole database. However, some tables take much longer than others due to the amount of data: `play_by_play`, `shot_chart_detail`, and `pgtt` in particular. These can be skilled with the `--skip-tables` option.
 
 The following environment variables must be set. There are no commandline arguments to specify these. The following example are connection details for the provided docker-compose database:
 ```
@@ -40,6 +36,9 @@ FROM player_game_log
 LEFT JOIN player ON player.player_id = player_game_log.player_id 
 WHERE player.player_name = 'Russell Westbrook';
 ```
+
+It will take an estimated 6 hours to build the whole database. However, some tables take much longer than others due to the amount of data: `play_by_play`, `shot_chart_detail`, and `pgtt` in particular. These can be skilled with the `--skip-tables` option. Most basic queries can use the `player_game_log` (which is unskippable).
+
 
 ## Commandline Reference
 ```
@@ -167,3 +166,8 @@ This can be resolved by installing `postgresql` through Homebrew:
 ```bash
 brew install postgresql
 ```
+
+# :pray: Acknowledgements
+* [@avadhanij](https://github.com/avadhanij): For guidance and knowledge.
+* [nba_api project](https://github.com/swar/nba_api): A great resource to reference for endpoint documentation.
+* BurntSushi's [nfldb](https://github.com/BurntSushi/nfldb): The inspiration for this project.
