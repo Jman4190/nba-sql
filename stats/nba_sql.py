@@ -19,6 +19,8 @@ import argparse
 import time
 import copy
 
+from gooey import Gooey
+
 description = """
     nba_sql application.
 
@@ -30,6 +32,10 @@ description = """
     """
 
 
+@Gooey(
+    program_name='nba-sql',
+    program_description='A database for NBA data.',
+    header_show_title=True)
 def main():
     """
     Main driver for the nba_sql application.
@@ -69,7 +75,7 @@ def main():
         '--create-schema',
         dest='create_schema',
         action="store_true",
-        default=False,
+        default=True,
         help="""
             Flag to initialize the database schema before loading data.
             """
@@ -78,7 +84,7 @@ def main():
     parser.add_argument(
         '--database',
         dest='database',
-        default='mysql',
+        default='sqlite',
         choices=['mysql', 'postgres', 'sqlite'],
         help="""
             The database flag specifies which database protocol to use.
@@ -102,8 +108,8 @@ def main():
         '--skip-tables',
         action='store',
         nargs="*",
-        default=[],
-        choices=['player_season', 'player_game_log', 'play_by_play', 'pgtt', 'shot_chart_detail'],
+        default='',
+        choices=['player_season', 'player_game_log', 'play_by_play', 'pgtt', 'shot_chart_detail', ''],
         help=(
             "Use this option to skip loading certain tables. "
             " Example: --skip-tables play_by_play pgtt"
