@@ -129,7 +129,7 @@ def main():
         choices=['mysql', 'postgres', 'sqlite'],
         help="""
             The database flag specifies which database protocol to use.
-            Defaults to "mysql", but also accepts "postgres" and "sqlite".
+            Defaults to "sqlite", but also accepts "postgres" and "mysql".
             Example usage:
             --database postgres
             """
@@ -142,6 +142,17 @@ def main():
         help="""
             This flag exists to prevent rate limiting,
             and we inject a sleep inbetween requesting resources.
+            """
+    )
+
+    #To fix issue https://github.com/mpope9/nba-sql/issues/56
+    parser.add_argument(
+        '--batch_size',
+        default='10000',
+        type=int,
+        help="""
+            Inserts BATCH_SIZE chunks of rows to the database.
+            This value is ignored when selecting database 'sqlite'.
             """
     )
 
@@ -171,7 +182,8 @@ def main():
         args.database_name, 
         args.username, 
         args.password,
-        args.database_host)
+        args.database_host,
+        args.batch_size)
 
     player_requester = PlayerRequester(settings)
     team_requester = TeamRequester(settings)
