@@ -371,6 +371,17 @@ def create_parser():
             " Example: --skip-tables play_by_play pgtt"
         ))
 
+    #To fix issue https://github.com/mpope9/nba-sql/issues/56
+    parser.add_argument(
+        '--batch_size',
+        default='10000',
+        type=int,
+        help="""
+            Inserts BATCH_SIZE chunks of rows to the database.
+            This value is ignored when selecting database 'sqlite'.
+            """
+    )
+
     return parser
 
 
