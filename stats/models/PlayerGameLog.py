@@ -56,3 +56,7 @@ class PlayerGameLog(Model):
             'player_id',
             'game_id'
         )
+        indexes = (
+            (('player_id', 'season_id'), False),
+            (('player_id', 'season_id', 'team_id'), False),
+        )

@@ -38,5 +38,5 @@ class PlayerSeason(Model):
     class Meta:
         db_table = 'player_season'
         indexes = (
-            (('player_id', 'season_id', 'team_id'), True),
+            (('player_id', 'season_id', 'team_id'), False),
         )
