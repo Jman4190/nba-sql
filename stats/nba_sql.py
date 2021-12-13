@@ -13,6 +13,9 @@ from shot_chart_detail import ShotChartDetailRequester
 
 from constants import season_list, team_ids
 from settings import Settings
+from utils import progress_bar
+
+from args import create_parser
 
 import concurrent.futures
 import time
@@ -20,8 +23,7 @@ import copy
 import sys
 import codecs
 
-from gooey import Gooey, GooeyParser
-
+from gooey import Gooey
 
 description = """
     nba_sql application.
@@ -62,31 +64,14 @@ if len(sys.argv)>=2:
         sys.argv.append('--ignore-gooey')
 
 
-@Gooey(
-    program_name='nba-sql',
-    program_description='A database for NBA data.',
-    header_show_title=True)
-def main():
+# TODO: load these args into the settings class.
+def default_mode(settings, create_schema, request_gap, seasons, skip_tables):
     """
-    Main driver for the nba_sql application.
+    The default mode of loading data. This is for initializing the database
+    and loading specific seasons.
     """
 
-    args = create_parser().parse_args()
-
-    # CMD line args.
-    create_schema = args.create_schema
-    request_gap = float(args.request_gap)
-    seasons = args.seasons
-    skip_tables = args.skip_tables
-
-    print(f"Loading seasons: {seasons}.")
-    settings = Settings(
-        args.database_type, 
-        args.database_name, 
-        args.username, 
-        args.password,
-        args.database_host,
-        args.batch_size)
+    print("Loading the database in the default mode.")
 
     player_requester = PlayerRequester(settings)
     team_requester = TeamRequester(settings)
@@ -215,7 +200,7 @@ def main():
             shot_chart_requester.populate()
             time.sleep(request_gap)
 
-        shot_chart_requester.finalize()
+        shot_chart_requester.finalize(game_builder.game_id_predicate())
 
     season_bar = progress_bar(
         seasons,
@@ -246,143 +231,84 @@ def do_create_schema(object_list):
         obj.create_ddl()
 
 
-def progress_bar(iterable, prefix='', suffix='', decimals=1, length=100, fill='█', printEnd="\r"):
+def current_season_mode(settings, request_gap, skip_tables):
     """
-    https://stackoverflow.com/questions/3173320/text-progress-bar-in-the-console
-    Call in a loop to create terminal progress bar
-    @params:
-    iteration   - Required  : current iteration (Int)
-    total       - Required  : total iterations (Int)
-    prefix      - Optional  : prefix string (Str)
-    suffix      - Optional  : suffix string (Str)
-    decimals    - Optional  : number of decimals in percent complete (Int)
-    length      - Optional  : character length of bar (Int)
-    fill        - Optional  : bar fill character (Str)
-    printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    Refreshes the current season in a previously existing database.
     """
-    total = 1
-    if iterable:
-        total = len(iterable)
 
-    # Progress Bar Printing Function
-    def printProgressBar(iteration):
-        percent = (
-            ("{0:." + str(decimals) + "f}")
-            .format(100 * (iteration / float(total)))
-        )
-        filledLength = int(length * iteration // total)
-        bar = fill * filledLength + '-' * (length - filledLength)
-        print(f'\r{prefix} |{bar}| {percent}% {suffix}', end=printEnd)
-    # Initial Call
-    printProgressBar(0)
-    # Update Progress Bar
-    for i, item in enumerate(iterable):
-        yield item
-        printProgressBar(i + 1)
-    # Print New Line on Complete
-    print()
+    print("Refreshing the current season in the existing database.")
+
+    season = season_list[-1]
+
+    player_game_log_requester = PlayerGameLogRequester(settings)
+    game_builder = GameBuilder(settings)
+    shot_chart_requester = ShotChartDetailRequester(settings)
+
+    print("Fetching current season data.")
+    player_game_log_requester.fetch_season(season)
+    player_game_log_requester.populate_temp()
+    time.sleep(request_gap)
+
+    if 'player_game_log' not in skip_tables:
+        player_game_log_requester.insert_from_temp_into_reg()
+
+    game_set = player_game_log_requester.get_game_set()
+    # Insert new games and ignore duplicates, becuase its difficult to actually
+    # do this the correct way.
+    game_builder.populate_table(game_set, True)
+
+    if 'shot_chart_detail' not in skip_tables:
+        team_player_set = player_game_log_requester.get_team_player_id_set(True)
+
+        shot_chart_bar = progress_bar(
+            team_player_set,
+            prefix='Loading Shot Chart Data',
+            suffix='',
+            length=30)
+
+        for id_tuple in shot_chart_bar:
+
+            shot_chart_requester.generate_rows(id_tuple[0], id_tuple[1])
+            shot_chart_requester.populate()
+            time.sleep(request_gap)
+
+        scd_predicate = player_game_log_requester.temp_table_except_predicate()
+        shot_chart_requester.finalize(scd_predicate)
 
 
-def create_parser():
+@Gooey(
+    program_name='nba-sql',
+    program_description='An application to build a database of NBA data.',
+    header_show_title=True)
+def main():
+    """
+    Main driver for the nba-sql application.
+    """
 
-    parser = GooeyParser(description="nba-sql")
+    args = create_parser().parse_args()
 
-    parser.add_argument(
-        '--database_name', 
-        help="Database Name (Not Needed For SQLite)",
-        default=None)
+    # CMD line args.
+    default_mode_set = args.default_mode
+    current_season_mode_set = args.current_season_mode
 
-    parser.add_argument(
-        '--database_host', 
-        help="Database Hostname (Not Needed For SQLite)",
-        default=None)
+    create_schema = args.create_schema
+    request_gap = float(args.request_gap)
+    seasons = args.seasons
+    skip_tables = args.skip_tables
 
-    parser.add_argument(
-        '--username',
-        help="Database Username (Not Needed For SQLite)",
-        default=None)
+    print(f"Loading seasons: {seasons}.")
+    settings = Settings(
+        args.database_type, 
+        args.database_name, 
+        args.username, 
+        args.password,
+        args.database_host,
+        args.batch_size)
 
-    parser.add_argument(
-        '--password',
-        help="Database Password (Not Needed For SQLite)",
-        widget='PasswordField',
-        default=None)
-
-    last_loadable_season = season_list[-1]
-
-    parser.add_argument(
-        '--seasons',
-        dest='seasons',
-        default=[last_loadable_season],
-        choices=season_list,
-        widget='Listbox',
-        nargs="*",
-        help="""
-            The seasons flag loads the database with the specified season.
-            The format of the season should be in the form "YYYY-YY".
-            The default behavior is loading the current season.
-            Example usage:
-            --seasons 2019-2020 2020-2021
-            """
-    )
-
-    parser.add_argument(
-        '--create-schema',
-        dest='create_schema',
-        action="store_true",
-        default=True,
-        help="""
-            Flag to initialize the database schema before loading data.
-            """
-    )
-
-    parser.add_argument(
-        '--database',
-        dest='database_type',
-        default='sqlite',
-        choices=['mysql', 'postgres', 'sqlite'],
-        help="""
-            The database flag specifies which database protocol to use.
-            Defaults to "mysql", but also accepts "postgres" and "sqlite".
-            Example usage:
-            --database postgres
-            """
-    )
-
-    parser.add_argument(
-        '--time-between-requests',
-        dest='request_gap',
-        default='.7',
-        help="""
-            This flag exists to prevent rate limiting,
-            and we inject a sleep inbetween requesting resources.
-            """
-    )
-
-    parser.add_argument(
-        '--skip-tables',
-        action='store',
-        nargs="*",
-        default='',
-        choices=['player_season', 'player_game_log', 'play_by_play', 'pgtt', 'shot_chart_detail', 'game', 'event_message_type', 'team', 'player', ''],
-        widget='Listbox',
-        help=(
-            "Use this option to skip loading certain tables. "
-            " Example: --skip-tables play_by_play pgtt"
-        ))
-
-    #To fix issue https://github.com/mpope9/nba-sql/issues/56
-    parser.add_argument(
-        '--batch_size',
-        default='10000',
-        type=int,
-        help="""
-            Inserts BATCH_SIZE chunks of rows to the database.
-            This value is ignored when selecting database 'sqlite'.
-            """
-    )
-
-    return parser
+    if default_mode_set:
+        default_mode(settings, create_schema, request_gap, seasons, skip_tables)
+    if current_season_mode_set:
+        current_season_mode(settings, request_gap, skip_tables)
 
 
 if __name__ == "__main__":

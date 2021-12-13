@@ -1,7 +1,7 @@
 from models import Game
 from constants import team_abbrev_mapping
 from collections import namedtuple
-from db_utils import insert_many
+from db_utils import insert_many, insert_many_on_conflict_ignore
 
 
 GameEntry = namedtuple("GameEntry", "season_id, game_id, game_date, matchup_in, winner, loser")
@@ -19,11 +19,18 @@ class GameBuilder:
         """
         self.settings.db.create_tables([Game], safe=True)
 
-    def populate_table(self, game_set):
+    def game_id_predicate(self):
+        """
+        Returns a selection of the game id.
+        """
+        return Game.select(Game.game_id)
+
+    def populate_table(self, game_set, ignore_dups = False):
         """
         Takes a set of tuples and builds the game table.
         @params:
         game_set   - Required  : Set of GameEntry namedtuple entries (Set)
+        ignore_dups - Optional : Will ignore duplicate entries if present.
         """
         rows = []
 
@@ -55,4 +62,7 @@ class GameBuilder:
 
             rows.append(new_row)
 
-        insert_many(self.settings, Game, rows)
+        if ignore_dups:
+            insert_many_on_conflict_ignore(self.settings, Game, rows)
+        else:
+            insert_many(self.settings, Game, rows)
