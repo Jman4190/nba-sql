@@ -96,6 +96,10 @@ def create_parser():
         type=int,
         help="Inserts BATCH_SIZE chunks of rows to the database. This value is ignored when selecting database 'sqlite'.")
 
+    parser.add_argument(
+        '--sqlite-path',
+        dest='sqlite_path',
+        default='nba_sql.db',
+        help='Setting to define sqlite path.')
+
     return parser
-
-

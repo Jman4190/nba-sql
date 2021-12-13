@@ -303,7 +303,8 @@ def main():
         args.username, 
         args.password,
         args.database_host,
-        args.batch_size)
+        args.batch_size,
+        args.sqlite_path)
 
     if default_mode_set:
         default_mode(settings, create_schema, request_gap, seasons, skip_tables)

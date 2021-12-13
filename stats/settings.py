@@ -16,7 +16,7 @@ DB_PASSWORD = os.getenv('DB_PASSWORD')
 
 class Settings:
 
-    def __init__(self, database_type, database_name, database_user, database_password, database_host, batch_size):
+    def __init__(self, database_type, database_name, database_user, database_password, database_host, batch_size, sqlite_path):
 
         self.user_agent = (
             "Mozilla/5.0 (X11; Linux x86_64) "
@@ -51,7 +51,7 @@ class Settings:
             )
         elif database_type == "sqlite":
             print("Initializing sqlite database.")
-            self.db = SqliteDatabase('nba_sql.db', pragmas={'journal_mode': 'wal'})
+            self.db = SqliteDatabase(sqlite_path, pragmas={'journal_mode': 'wal'})
         else:
             print("Connecting to mysql database.")
             self.db = MySQLDatabase(
