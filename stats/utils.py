@@ -44,7 +44,7 @@ def chunk_list(in_list, n):
     return [in_list[i:i + n] for i in range(0, len(in_list), n)]
 
 
-def progress_bar(iterable, prefix='', suffix='', decimals=1, length=100, fill='â–ˆ', printEnd="\r"):
+def progress_bar(iterable, prefix='', suffix='', decimals=1, length=100, fill='â–ˆ', printEnd="\r", quiet=False):
     """
     https://stackoverflow.com/questions/3173320/text-progress-bar-in-the-console
     Call in a loop to create terminal progress bar
@@ -57,6 +57,7 @@ def progress_bar(iterable, prefix='', suffix='', decimals=1, length=100, fill='â
     length      - Optional  : character length of bar (Int)
     fill        - Optional  : bar fill character (Str)
     printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    quiet       - Optoinal  : should do printing. (Bool)
     """
     total = 1
     if iterable:
@@ -70,7 +71,8 @@ def progress_bar(iterable, prefix='', suffix='', decimals=1, length=100, fill='â
         )
         filledLength = int(length * iteration // total)
         bar = fill * filledLength + '-' * (length - filledLength)
-        print(f'\r{prefix} |{bar}| {percent}% {suffix}', end=printEnd)
+        if not quiet:
+            print(f'\r{prefix} |{bar}| {percent}% {suffix}', end=printEnd)
     # Initial Call
     printProgressBar(0)
     # Update Progress Bar
@@ -78,6 +80,7 @@ def progress_bar(iterable, prefix='', suffix='', decimals=1, length=100, fill='â
         yield item
         printProgressBar(i + 1)
     # Print New Line on Complete
-    print()
+    if not quiet:
+        print()
 
 

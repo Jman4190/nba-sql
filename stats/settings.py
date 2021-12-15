@@ -16,7 +16,7 @@ DB_PASSWORD = os.getenv('DB_PASSWORD')
 
 class Settings:
 
-    def __init__(self, database_type, database_name, database_user, database_password, database_host, batch_size, sqlite_path):
+    def __init__(self, database_type, database_name, database_user, database_password, database_host, batch_size, sqlite_path, quiet):
 
         self.user_agent = (
             "Mozilla/5.0 (X11; Linux x86_64) "
@@ -42,7 +42,8 @@ class Settings:
             host = database_host
 
         if database_type == "postgres":
-            print("Connecting to postgres database.")
+            if not quiet:
+                print("Connecting to postgres database.")
             self.db = PostgresqlDatabase(
                 name,
                 host=host,
@@ -50,10 +51,12 @@ class Settings:
                 password=password
             )
         elif database_type == "sqlite":
-            print("Initializing sqlite database.")
+            if not quiet:
+                print("Initializing sqlite database.")
             self.db = SqliteDatabase(sqlite_path, pragmas={'journal_mode': 'wal'})
         else:
-            print("Connecting to mysql database.")
+            if not quiet:
+                print("Connecting to mysql database.")
             self.db = MySQLDatabase(
                 name,
                 host=host,

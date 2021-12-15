@@ -231,12 +231,13 @@ def do_create_schema(object_list):
         obj.create_ddl()
 
 
-def current_season_mode(settings, request_gap, skip_tables):
+def current_season_mode(settings, request_gap, skip_tables, quiet):
     """
     Refreshes the current season in a previously existing database.
     """
 
-    print("Refreshing the current season in the existing database.")
+    if not quiet:
+        print("Refreshing the current season in the existing database.")
 
     season = season_list[-1]
 
@@ -244,7 +245,9 @@ def current_season_mode(settings, request_gap, skip_tables):
     game_builder = GameBuilder(settings)
     shot_chart_requester = ShotChartDetailRequester(settings)
 
-    print("Fetching current season data.")
+    if not quiet:
+        print("Fetching current season data.")
+
     player_game_log_requester.fetch_season(season)
     player_game_log_requester.populate_temp()
     time.sleep(request_gap)
@@ -253,7 +256,7 @@ def current_season_mode(settings, request_gap, skip_tables):
         player_game_log_requester.insert_from_temp_into_reg()
 
     game_set = player_game_log_requester.get_game_set()
-    # Insert new games and ignore duplicates, becuase its difficult to actually
+    # Insert new games and ignore duplicates, becuase its difficult to
     # do this the correct way.
     game_builder.populate_table(game_set, True)
 
@@ -264,7 +267,8 @@ def current_season_mode(settings, request_gap, skip_tables):
             team_player_set,
             prefix='Loading Shot Chart Data',
             suffix='',
-            length=30)
+            length=30,
+            quiet=quiet)
 
         for id_tuple in shot_chart_bar:
 
@@ -274,6 +278,9 @@ def current_season_mode(settings, request_gap, skip_tables):
 
         scd_predicate = player_game_log_requester.temp_table_except_predicate()
         shot_chart_requester.finalize(scd_predicate)
+
+    if quiet:
+        print("ok")
 
 
 @Gooey(
@@ -295,8 +302,11 @@ def main():
     request_gap = float(args.request_gap)
     seasons = args.seasons
     skip_tables = args.skip_tables
+    quiet = args.quiet
 
-    print(f"Loading seasons: {seasons}.")
+    if not quiet:
+        print(f"Loading seasons: {seasons}.")
+
     settings = Settings(
         args.database_type, 
         args.database_name, 
@@ -304,12 +314,13 @@ def main():
         args.password,
         args.database_host,
         args.batch_size,
-        args.sqlite_path)
+        args.sqlite_path,
+        args.quiet)
 
     if default_mode_set:
         default_mode(settings, create_schema, request_gap, seasons, skip_tables)
     if current_season_mode_set:
-        current_season_mode(settings, request_gap, skip_tables)
+        current_season_mode(settings, request_gap, skip_tables, quiet)
 
 
 if __name__ == "__main__":

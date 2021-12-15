@@ -102,4 +102,10 @@ def create_parser():
         default='nba_sql.db',
         help='Setting to define sqlite path.')
 
+    parser.add_argument(
+        '--quiet',
+        dest='quiet',
+        action='store_true',
+        help='Setting to define stdout logging level. If set, only "ok" will be printed if ran successfully. This currently only applies to refreshing a db, and not loading one.')
+
     return parser
