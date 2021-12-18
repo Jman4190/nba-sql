@@ -1,1 +1,1 @@
-py -m PyInstaller --windowed --paths=stats stats\nba_sql.py -F
+py -m PyInstaller --windowed -n nba_sql --paths=stats stats\gui.py -F
