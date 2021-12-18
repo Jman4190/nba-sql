@@ -14,17 +14,14 @@ from shot_chart_detail import ShotChartDetailRequester
 
 from constants import season_list, team_ids
 from settings import Settings
-from utils import progress_bar, generate_valid_season
+from utils import progress_bar, generate_valid_seasons
 
 from args import create_parser
 
 import concurrent.futures
+import argparse
 import time
 import copy
-import sys
-import codecs
-
-from gooey import Gooey
 
 description = """
     nba_sql application.
@@ -35,35 +32,6 @@ description = """
     EX:
         python3 stats/nba_sql.py
     """
-
-# This fixes an issue with Gooey and PyInstaller.
-if sys.stdout.encoding != 'UTF-8':
-    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
-if sys.stderr.encoding != 'UTF-8':
-    sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
-
-# This 'fixes' an issue with printing in the Gooey console, kinda sorta not really.
-class Unbuffered(object):
-   def __init__(self, stream):
-       self.stream = stream
-   def write(self, data):
-       self.stream.write(data)
-       self.stream.flush()
-   def writelines(self, datas):
-       self.stream.writelines(datas)
-       self.stream.flush()
-   def __getattr__(self, attr):
-       return getattr(self.stream, attr)
-
-sys.stdout = Unbuffered(sys.stdout)
-
-
-## Bad practice? Yes. Any other alternative? Not at this point.
-## Only enable Gooey if there are no arguments passed to the script.
-if len(sys.argv)>=2:
-    if not '--ignore-gooey' in sys.argv:
-        sys.argv.append('--ignore-gooey')
-
 
 # TODO: load these args into the settings class.
 def default_mode(settings, create_schema, request_gap, seasons, skip_tables):
@@ -291,16 +259,10 @@ def current_season_mode(settings, request_gap, skip_tables, quiet):
         print("ok")
 
 
-@Gooey(
-    program_name='nba-sql',
-    program_description='An application to build a database of NBA data.',
-    header_show_title=True)
-def main():
+def main(args):
     """
     Main driver for the nba-sql application.
     """
-
-    args = create_parser().parse_args()
 
     # CMD line args.
     default_mode_set = args.default_mode
@@ -331,5 +293,44 @@ def main():
         current_season_mode(settings, request_gap, skip_tables, quiet)
 
 
+# Default non-gui executable.
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='nba-sql')
+    create_parser(parser)
+
+    parser.add_argument(
+        '--default_mode',
+        help='Mode to create the database and load historic data. Use this mode when creating a new database or when trying to load a specific season or a range of seasons.',
+        action='store_true')
+    parser.add_argument(
+        '--current_season_mode',
+        help='Mode to refresh the current season. Use this mode on an existing database to update it with the latest data.',
+        action='store_true')
+
+    parser.add_argument(
+        '--password',
+        help="Database Password (Not Needed For SQLite)",
+        default=None)
+
+    valid_seasons = generate_valid_seasons()
+    last_loadable_season = valid_seasons[-1]
+
+    parser.add_argument(
+        '--seasons',
+        dest='seasons',
+        default=[last_loadable_season],
+        choices=valid_seasons,
+        nargs="*",
+        help='The seasons flag loads the database with the specified season.  The format of the season should be in the form "YYYY-YY".  The default behavior is loading the current season.')
+
+    parser.add_argument(
+        '--skip-tables',
+        action='store',
+        nargs="*",
+        default='',
+        choices=['player_season', 'player_game_log', 'play_by_play', 'pgtt', 'shot_chart_detail', 'game', 'event_message_type', 'team', 'player', ''],
+        help='Use this option to skip loading certain tables.')
+
+    args = parser.parse_args()
+
+    main(args)

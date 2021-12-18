@@ -1,1 +1,2 @@
-pyinstaller --windowed --paths=stats stats/nba_sql.py -F
+#!/bin/bash
+pyinstaller --windowed -n nba_sql --paths=stats stats/gui.py -F
