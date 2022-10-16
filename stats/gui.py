@@ -4,6 +4,8 @@ from args import create_parser
 from gooey import Gooey
 from gooey import GooeyParser
 
+from utils import generate_valid_seasons
+
 import codecs
 import sys
 
