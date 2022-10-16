@@ -4,7 +4,7 @@
 
 An application to build a Postgres, MySQL, or SQLite NBA database from the public API.
 
-If you are looking for the Windows client: [the latest alpha can be found here](https://github.com/mpope9/nba-sql/releases/tag/v0.0.6).
+The latest Linux, MacOs, and Windows releases [can be found in the releases section.](https://github.com/mpope9/nba-sql/releases/tag/v0.0.9).
 
 This DB is still in it's alpha stage and liable to schema changes. v0.1.0 will be the final schema before an official migration system is added. Until then, expect to rebuild the whole DB when trying to refresh stats.
 
