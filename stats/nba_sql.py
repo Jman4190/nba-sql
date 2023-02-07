@@ -14,7 +14,7 @@ from shot_chart_detail import ShotChartDetailRequester
 
 from constants import season_list, team_ids
 from settings import Settings
-from utils import progress_bar, generate_valid_seasons
+from utils import progress_bar, generate_valid_seasons, generate_valid_season
 
 from args import create_parser
 
@@ -22,6 +22,7 @@ import concurrent.futures
 import argparse
 import time
 import copy
+import sys
 
 description = """
     nba_sql application.
@@ -209,16 +210,19 @@ def current_season_mode(settings, request_gap, skip_tables, quiet):
     Refreshes the current season in a previously existing database.
     """
 
-    if not quiet:
-        print("Refreshing the current season in the existing database.")
-
-
     player_game_log_requester = PlayerGameLogRequester(settings)
     game_builder = GameBuilder(settings)
     shot_chart_requester = ShotChartDetailRequester(settings)
     season_builder = SeasonBuilder(settings)
 
     season_id = season_builder.current_season_loaded()
+
+    if season_id is None:
+        sys.exit("Error: option '--current-season-mode' passed on an uninitialized database. First load a season using the '--default-mode' flag!")
+
+    if not quiet:
+        print("Refreshing the current season in the existing database.")
+
     season = generate_valid_season(season_id)
 
     if not quiet:
@@ -267,6 +271,9 @@ def main(args):
     # CMD line args.
     default_mode_set = args.default_mode
     current_season_mode_set = args.current_season_mode
+
+    if not default_mode_set and not current_season_mode_set:
+        sys.exit("Error: Pass either '--default-mode' to create the database / add a new season, or '--current-season-mode' to refresh the last season loaded in an existing database.")
 
     create_schema = args.create_schema
     request_gap = float(args.request_gap)

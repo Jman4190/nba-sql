@@ -3,6 +3,7 @@ Misc utilities.
 """
 
 import datetime
+from constants import season_list
 
 
 def season_id_to_int(season_id):
@@ -91,7 +92,8 @@ def generate_valid_seasons():
     """
 
     valid_seasons = []
-    for x in range(1997, datetime.datetime.today().year + 1):
+    curr_season = int(season_list[-1].split('-')[1])
+    for x in range(1997, curr_season + 2000):
         valid_season = generate_valid_season(x)
         valid_seasons.append(valid_season)
 
